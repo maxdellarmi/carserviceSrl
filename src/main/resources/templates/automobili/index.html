@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Automobili</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+<div class="container jumbotron">
+    <h2>Automobili Manager CAR SERVICE S.r.l</h2>
+    <table class="table table-dark">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Modello</th>
+            <th scope="col">Targa</th>
+            <th scope="col">Numero telaio</th>
+            <th scope="col">Colore</th>
+            <th scope="col">Data vendita</th>
+            <th scope="col">Prezzo vendita</th>
+            <th scope="col">Nome del proprietario</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${automobili.isEmpty()}">
+            <td colspan="2"> Non ci sono automobili disponibili. </td>
+        </tr>
+        <tr th:each="auto : ${automobili}">
+            <th scope="row"><span th:text="${auto.id}"> ID </span></th>
+            <td><span th:text="${auto.modello}"> Modello</span></td>
+            <td><span th:text="${auto.targa}"> Targa</span></td>
+            <td><span th:text="${auto.numeroTelaio}"> Telaio</span></td>
+            <td><span th:text="${auto.colore}"> Colore</span></td>
+            <div th:if="${auto.dataVendita}">
+                <td><span  th:text="${#temporals.format(auto.dataVendita, 'dd-MM-yyyy HH:mm')}"></span></td>
+            </div>
+            <!-- ELSE -->
+            <div th:unless="${auto.dataVendita}">
+                <td><span>-</span></td>
+            </div>
+            <td><span th:text="${auto.prezzoVendita}"></span></td>
+            <!-- IF CUSTOMER IS NOT ANONYMOUS -->
+            <div th:if="${auto.owner}">
+                <td><span th:text="${auto.owner.getNome()} + ' '+ ${auto.owner.getCognome()}">Nome del proprietario</span></td>
+            </div>
+            <!-- ELSE -->
+            <div th:unless="${auto.owner}">
+                <td><span>Nessun proprietario</span></td>
+            </div>
+            <td>
+                <a th:href="@{'/automobili/edit/'+${auto.id}}" class="btn btn-secondary a-btn-slide-text">
+                    <span><strong>Aggiorna vendita</strong></span>
+                </a>
+                <a th:href="@{'/automobili/delete/'+${auto.id}}" class="btn btn-danger a-btn-slide-text">
+                    <span><strong>Cancella</strong></span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="float-right">
+        <a class="btn btn-primary btn-sm" href="/automobili/add">Inserisci nuova auto</a>
+    </div>
+</div>
+</body>
+</html>

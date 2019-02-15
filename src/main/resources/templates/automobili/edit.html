@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Automobili</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<script>
+    $( document ).ready(function() {
+        /*$('#proprietario').on("change", function() {
+            console.log($('#proprietario option:selected').val());
+            alert($('#proprietario option:selected').val());
+            //$('#proprietarioSelected').val($('#selectedProprietario option:selected').val());
+            // your ajax call
+        });*/
+    });
+</script>
+<body>
+<div class="container jumbotron">
+    <h2 th:text="'Automobili Manager Edit ' + ${automobile.id}"></h2>
+    <div style="color: green"><span th:text="${okMessage}"></span> </div>
+    <div style="color: red"><span th:text="${errorMessage}"></span> </div>
+    <form action="#" th:action="@{/automobili/edit}" th:object="${automobile}" method="post">
+        <div class="form-group">
+            <input type="hidden" th:field="*{id}">
+
+            <!--elemento singolo-->
+            <label for="targa">targa</label>
+            <input type="text" class="form-control" id="targa" th:field="*{targa}" placeholder="targa" th:min="2">
+            <span th:if="${#fields.hasErrors('targa')}" th:errors="*{targa}">Targa Error</span>
+
+            <label for="modello">modello</label>
+            <input type="text" class="form-control" id="modello" th:field="*{modello}" placeholder="modello" th:min="2">
+            <span th:if="${#fields.hasErrors('modello')}" th:errors="*{targa}">modello Error</span>
+
+            <label for="numeroTelaio">numero Telaio</label>
+            <input type="text" class="form-control" id="numeroTelaio" th:field="*{numeroTelaio}" placeholder="numeroTelaio" th:min="17" th:max="17">
+            <span th:if="${#fields.hasErrors('numeroTelaio')}" th:errors="*{numeroTelaio}">numero telaio Error</span>
+
+            <label for="colore">colore</label>
+            <input type="text" class="form-control" id="colore" th:field="*{colore}" placeholder="colore" th:min="2" >
+            <span th:if="${#fields.hasErrors('colore')}" th:errors="*{colore}">colore Error</span>
+
+            <!--DOPPIE {{}} per la conversione di data vendita -->
+            <label for="dataVendita">dataVendita</label>
+            <input type="datetime-local" class="form-control" required="required" id="dataVendita" th:field="*{{dataVendita}}"  placeholder="dataVendita" />
+            <span th:if="${#fields.hasErrors('dataVendita')}" th:errors="*{dataVendita}">data Vendita Error</span>
+
+            <label for="prezzoVendita">prezzoVendita</label>
+            <input type="text" class="form-control" required="required" id="prezzoVendita" th:field="*{prezzoVendita}" placeholder="prezzoVendita" th:min="2" >
+            <span th:if="${#fields.hasErrors('prezzoVendita')}" th:errors="*{prezzoVendita}">colore Error</span>
+            <!--Gestione delle options https://www.baeldung.com/thymeleaf-select-option -->
+            <div th:if="${newProprietario}==false">
+                <label for="prezzoVendita">Proprietario</label><br>
+                <select th:field="${automobile.owner.id}" id="proprietario" th:required="true">  <!--NOME DEL MODEL PER EFFETTUARE LA SELEZIONE!!!! -->
+                    <option value="">Seleziona il proprietario tra la lista dei proprietari disponibili</option>
+                    <option  th:each="proprietario : ${proprietari}" th:value="${proprietario.getId()}" th:text="${proprietario.getNome()}+ ' '+ ${proprietario.getCognome()}+ ' '+ ${proprietario.getCodiceFiscale()} "
+                             th:selected="${proprietario.getId()==automobile.owner.id}"></option>
+                </select>
+                <!--<span th:if="${#fields.hasErrors('proprietari')}" th:errors="*{proprietari}">Proprietario Error</span>-->
+            </div>
+            <!-- ELSE -->
+            <div th:unless="${newProprietario}==false" >
+                <label for="prezzoVendita">Proprietario</label><br>
+                <select th:field="${automobile.owner.id}" id="proprietario"  th:required="true" > <!--NOME DEL MODEL PER EFFETTUARE LA SELEZIONE!!!! -->
+                    <option selected value="">Seleziona il proprietario tra la lista dei proprietari disponibili</option>
+                    <option  th:each="proprietario : ${proprietari}"
+                             th:value="${proprietario.getId()}"
+                             th:text="${proprietario.getDescription()}"
+                         />
+                </select>
+                <!--<span th:if="${#fields.hasErrors('proprietari')}" th:errors="*{proprietari}">Proprietario Error</span>-->
+            </div>
+        </div>
+        <div class="float-right">
+            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+            <a class="btn btn-secondary btn-sm" href="/automobili/all">Cancel</a>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>
